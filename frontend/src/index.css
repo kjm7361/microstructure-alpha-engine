@@ -1,0 +1,122 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background-color: #0a0e14;
+  color: #c9d1d9;
+  font-family: 'JetBrains Mono', 'Fira Code', Consolas, 'Courier New', monospace;
+  -webkit-font-smoothing: antialiased;
+  font-size: 13px;
+}
+
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: #0d1117; }
+::-webkit-scrollbar-thumb { background: #2d3748; border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: #4a5568; }
+
+/* ── Panel shell ────────────────────────────────────────────────── */
+.panel {
+  background: #0d1117;
+  border: 1px solid #1c2333;
+  border-radius: 3px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.panel-header {
+  background: #131920;
+  border-bottom: 1px solid #1c2333;
+  padding: 7px 14px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.10em;
+  color: #8b95a4;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.panel-header .accent {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ── Stat typography helpers ────────────────────────────────────── */
+.stat-label {
+  font-size: 10px;
+  letter-spacing: 0.09em;
+  color: #8b95a4;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.stat-value-primary {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #e6edf3;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+
+.stat-sub {
+  font-size: 10px;
+  color: #6b7280;
+  margin-top: 3px;
+}
+
+/* ── Glow text effects ──────────────────────────────────────────── */
+.glow-green { text-shadow: 0 0 12px rgba(0, 255, 136, 0.55); }
+.glow-cyan  { text-shadow: 0 0 12px rgba(0, 212, 255, 0.55); }
+.glow-red   { text-shadow: 0 0 12px rgba(255, 77, 77, 0.55); }
+.glow-yellow { text-shadow: 0 0 10px rgba(255, 215, 0, 0.45); }
+
+/* ── Flash animations ───────────────────────────────────────────── */
+@keyframes flash-green {
+  0%   { background-color: rgba(0, 255, 136, 0.22); }
+  100% { background-color: transparent; }
+}
+@keyframes flash-red {
+  0%   { background-color: rgba(255, 77, 77, 0.22); }
+  100% { background-color: transparent; }
+}
+.flash-green { animation: flash-green 0.38s ease-out; }
+.flash-red   { animation: flash-red 0.38s ease-out; }
+
+/* ── Empty/loading states ───────────────────────────────────────── */
+.state-disconnected {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #2d3748;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+}
+
+.state-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  font-size: 11px;
+  letter-spacing: 0.10em;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* ── Divider between stat cells ─────────────────────────────────── */
+.stat-divider {
+  border-bottom: 1px solid #1c2333;
+}
+
+/* ── Number input reset ─────────────────────────────────────────── */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+input[type=number] { -moz-appearance: textfield; }
