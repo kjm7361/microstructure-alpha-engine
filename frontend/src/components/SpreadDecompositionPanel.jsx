@@ -59,11 +59,8 @@ export default function SpreadDecompositionPanel({ ticker, connected }) {
       <div className="panel-header">
         <span className="accent bg-[#ff4d4d]" />
         SPREAD DECOMPOSITION
-        <span className="ml-auto flex items-center gap-3">
+        <span className="ml-auto">
           {isDemo && <span className="text-[9px] text-[#ffd700]/50 tracking-widest">DEMO</span>}
-          <span className={`tracking-normal normal-case font-normal text-[11px] tabular-nums ${isDemo ? 'text-[#ffd700]/60' : 'text-[#ffd700]'}`}>
-            {total.toFixed(2)} bps
-          </span>
         </span>
       </div>
 
@@ -129,7 +126,17 @@ export default function SpreadDecompositionPanel({ ticker, connected }) {
 
         {/* ── Footer ── */}
         <div className="border-t border-[#1c2333] pt-2 mt-1">
-          <span className="text-[10px] text-[#6b7280]">Roll (1984) + Glosten-Milgrom (1985)</span>
+          <span className="text-[10px] text-[#6b7280]">
+            <a href="https://doi.org/10.1111/j.1540-6261.1984.tb03897.x" target="_blank" rel="noopener noreferrer"
+              className="hover:text-[#8b95a4] hover:underline underline-offset-2 transition-colors">
+              Roll (1984)
+            </a>
+            {' '}+{' '}
+            <a href="https://doi.org/10.1016/0304-405X(85)90044-3" target="_blank" rel="noopener noreferrer"
+              className="hover:text-[#8b95a4] hover:underline underline-offset-2 transition-colors">
+              Glosten-Milgrom (1985)
+            </a>
+          </span>
         </div>
 
       </div>

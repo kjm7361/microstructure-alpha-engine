@@ -8,24 +8,38 @@ import SpreadDecompositionPanel from './components/SpreadDecompositionPanel'
 import LiveTradesFeed from './components/LiveTradesFeed'
 
 export default function App() {
-  const [ticker, setTicker]           = useState('AAPL')
-  const [connected, setConnected]     = useState(false)
-  const [snapshot, setSnapshot]       = useState(null)
-  const [trades, setTrades]           = useState([])
-  const [isSimulated, setIsSimulated] = useState(false)
+  const [ticker, setTicker]         = useState('AAPL')
+  const [connected, setConnected]   = useState(false)
+  const [snapshot, setSnapshot]     = useState(null)
+  const [trades, setTrades]         = useState([])
+  const [mode, setMode]             = useState('offline')   // 'live' | 'simulation' | 'offline'
+  const [modeReason, setModeReason] = useState('')
   const wsRef = useRef(null)
 
   const connect = useCallback((t) => {
     if (wsRef.current) wsRef.current.close()
     const ws = new WebSocket(`ws://localhost:8000/ws/orderbook?ticker=${t}`)
-    ws.onopen    = () => setConnected(true)
-    ws.onclose   = () => setConnected(false)
-    ws.onerror   = () => setConnected(false)
+
+    ws.onopen = () => setConnected(true)
+
+    ws.onclose = () => {
+      setConnected(false)
+      setMode('offline')
+      setModeReason('')
+    }
+
+    ws.onerror = () => {
+      setConnected(false)
+      setMode('offline')
+      setModeReason('')
+    }
+
     ws.onmessage = (e) => {
       const data = JSON.parse(e.data)
       if (data.type === 'snapshot') {
         setSnapshot(data)
-        setIsSimulated(!!data.is_simulated)
+        setMode(data.mode ?? (data.is_simulated ? 'simulation' : 'live'))
+        setModeReason(data.mode_reason ?? '')
         if (data.last_trade_price) {
           setTrades(prev => [{
             timestamp:  data.timestamp,
@@ -37,13 +51,16 @@ export default function App() {
         }
       }
     }
+
     wsRef.current = ws
   }, [])
 
   const disconnect = useCallback(() => {
     wsRef.current?.close()
-    wsRef.current = null
+    wsRef.current  = null
     setConnected(false)
+    setMode('offline')
+    setModeReason('')
     setSnapshot(null)
     setTrades([])
   }, [])
@@ -51,14 +68,15 @@ export default function App() {
   useEffect(() => () => wsRef.current?.close(), [])
 
   return (
-    <div className="min-h-screen bg-[#0a0e14] font-mono text-[#c9d1d9] select-none">
+    <div className="min-h-screen bg-[#0a0e14] font-mono text-[#c9d1d9] select-none border-t-2 border-[#00ff88]/60">
       <Header
         ticker={ticker}
         onTickerChange={setTicker}
         connected={connected}
         onConnect={() => connect(ticker)}
         onDisconnect={disconnect}
-        isSimulated={isSimulated}
+        mode={mode}
+        modeReason={modeReason}
       />
 
       {/*
@@ -68,7 +86,6 @@ export default function App() {
 
         Mobile: single column, priority order:
           OrderBook → OFI → KyleLambda → AlmgrenChriss → SpreadDecomp → LiveTrades
-        The `order-*` / `md:order-*` classes control this swap.
       */}
       <div className="p-3 grid grid-cols-1 md:grid-cols-12 gap-3 items-start">
 

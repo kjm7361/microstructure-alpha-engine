@@ -84,8 +84,14 @@ export default function KyleLambdaPanel({ ticker, connected }) {
       <div className="px-4 pt-3 pb-1 flex-1">
         <div className="stat-label mb-2">ROLLING λ — last {chartData.length} windows</div>
         <ResponsiveContainer width="100%" height={155}>
-          <LineChart data={chartData} margin={{ top: 4, right: 8, left: 2, bottom: 4 }}>
-            <XAxis dataKey="i" hide />
+          <LineChart data={chartData} margin={{ top: 4, right: 8, left: 2, bottom: 14 }}>
+            <XAxis
+              dataKey="i"
+              ticks={[0, chartData.length - 1]}
+              tickFormatter={(v) => v === 0 ? `-${chartData.length}` : 'now'}
+              tick={{ fontSize: 9, fill: '#6b7280', fontFamily: 'monospace' }}
+              axisLine={false} tickLine={false}
+            />
             <YAxis
               tickFormatter={v => v === 0 ? '0' : v.toExponential(0)}
               tick={{ fontSize: 10, fill: '#6b7280', fontFamily: 'monospace' }}
@@ -106,7 +112,11 @@ export default function KyleLambdaPanel({ ticker, connected }) {
         <span className="text-[10px] text-[#6b7280]">
           Δp = <span className="text-[#00d4ff]">λ</span>·Q + ε
           &nbsp;|&nbsp; Q = signed volume
-          &nbsp;|&nbsp; Higher λ → less liquid
+          &nbsp;|&nbsp;{' '}
+          <a href="https://doi.org/10.2307/1913210" target="_blank" rel="noopener noreferrer"
+            className="hover:text-[#8b95a4] hover:underline underline-offset-2 transition-colors">
+            Kyle (1985)
+          </a>
         </span>
       </div>
     </div>

@@ -113,7 +113,11 @@ export default function OFIPanel({ ticker, connected }) {
       {/* ── Footer ── */}
       <div className="border-t border-[#1c2333] px-4 py-2">
         <span className="text-[10px] text-[#6b7280]">
-          OFI = Σ Δbid_sz − Σ Δask_sz &nbsp;|&nbsp; Cont, Kukanov & Stoikov (2014)
+          OFI = Σ Δbid_sz − Σ Δask_sz &nbsp;|&nbsp;{' '}
+          <a href="https://arxiv.org/abs/1011.6402" target="_blank" rel="noopener noreferrer"
+            className="hover:text-[#8b95a4] hover:underline underline-offset-2 transition-colors">
+            Cont, Kukanov &amp; Stoikov (2014)
+          </a>
         </span>
       </div>
     </div>

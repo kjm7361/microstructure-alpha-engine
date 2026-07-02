@@ -80,7 +80,10 @@ export default function LiveTradesFeed({ trades, connected }) {
                 className={`grid grid-cols-4 px-3 py-2.5 border-b border-[#0d1117] items-center ${
                   !isDemo && i === 0 ? (t.side === 'BUY' ? 'flash-green' : 'flash-red') : ''
                 }`}
-                style={{ opacity: isDemo ? (i === 0 ? 0.75 : 0.75 - i * 0.03) : 1 }}
+                style={{
+                  opacity: isDemo ? (i === 0 ? 0.75 : 0.75 - i * 0.03) : 1,
+                  backgroundColor: t.side === 'BUY' ? 'rgba(0,255,136,0.05)' : 'rgba(255,77,77,0.05)',
+                }}
               >
                 <span className="text-[10px] text-[#6b7280] tabular-nums">
                   {fmtTime(t.timestamp)}

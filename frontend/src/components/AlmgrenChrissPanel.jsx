@@ -107,7 +107,7 @@ export default function AlmgrenChrissPanel({ ticker, connected }) {
         <button
           onClick={fetchData}
           disabled={loading || !connected}
-          className="ml-auto px-3.5 py-1.5 text-[11px] tracking-wider border border-[#ff8c00]/50 text-[#ff8c00] hover:bg-[#ff8c00]/10 transition-colors disabled:opacity-30"
+          className="ml-auto px-3.5 py-1.5 text-[11px] tracking-wider border border-[#ff8c00] text-[#ff8c00] hover:bg-[#ff8c00]/15 hover:shadow-[0_0_8px_rgba(255,140,0,0.3)] transition-all disabled:opacity-30 disabled:cursor-not-allowed"
         >
           {loading ? 'SOLVING...' : 'SOLVE'}
         </button>
@@ -140,7 +140,19 @@ export default function AlmgrenChrissPanel({ ticker, connected }) {
 
       {/* ── Execution trajectory chart ── */}
       <div className="px-4 pt-3 pb-1 flex-1">
-        <div className="stat-label mb-2">EXECUTION TRAJECTORY (shares remaining)</div>
+        <div className="flex items-center justify-between mb-2">
+          <div className="stat-label" style={{ marginBottom: 0 }}>EXECUTION TRAJECTORY (shares remaining)</div>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-1.5">
+              <div style={{ width: 14, height: 2, background: '#ff8c00' }} />
+              <span className="text-[9px] text-[#6b7280] font-mono">Optimal (AC)</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <svg width="14" height="3" style={{ display: 'block' }}><line x1="0" y1="1.5" x2="14" y2="1.5" stroke="#ff4d4d" strokeWidth="1.5" strokeDasharray="4 2"/></svg>
+              <span className="text-[9px] text-[#6b7280] font-mono">Uniform / VWAP</span>
+            </div>
+          </div>
+        </div>
         <ResponsiveContainer width="100%" height={170}>
           <LineChart data={chartData} margin={{ top: 4, right: 8, left: 2, bottom: 20 }}>
             <XAxis
@@ -175,7 +187,11 @@ export default function AlmgrenChrissPanel({ ticker, connected }) {
         <span className="text-[10px] text-[#6b7280]">
           κ = {display.kappa?.toExponential(2)}
           &nbsp;|&nbsp; x*(t) = X·sinh(κ(T−t))/sinh(κT)
-          &nbsp;|&nbsp; Almgren & Chriss (2001)
+          &nbsp;|&nbsp;{' '}
+          <a href="https://www.smallake.kr/wp-content/uploads/2016/03/optliq.pdf" target="_blank" rel="noopener noreferrer"
+            className="hover:text-[#8b95a4] hover:underline underline-offset-2 transition-colors">
+            Almgren &amp; Chriss (2001)
+          </a>
         </span>
       </div>
     </div>

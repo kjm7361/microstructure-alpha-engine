@@ -1,12 +1,23 @@
 import { useState } from 'react'
 
-const PRESETS = ['AAPL', 'TSLA', 'SPY', 'NVDA', 'MSFT', 'AMZN', 'GOOGL', 'META', 'QQQ', 'AMD']
+const PRESETS = [
+  'AAPL', 'TSLA', 'NVDA', 'MSFT', 'AMZN', 'GOOGL', 'META', 'AMD',
+  'NFLX', 'JPM', 'COIN', 'PLTR', 'HOOD', 'ORCL', 'CRM',
+  'SPY', 'QQQ', 'IWM', 'GLD', 'TLT',
+]
 
-export default function Header({ ticker, onTickerChange, connected, onConnect, onDisconnect, isSimulated }) {
+// mode ∈ 'live' | 'simulation' | 'offline'
+const MODE_CONFIG = {
+  live:       { dot: 'bg-[#00ff88] shadow-[0_0_7px_#00ff88]',  label: 'LIVE DATA',   text: 'text-[#00ff88]' },
+  simulation: { dot: 'bg-[#ffd700] shadow-[0_0_6px_#ffd700]',  label: 'SIMULATION',  text: 'text-[#ffd700]' },
+  offline:    { dot: 'bg-[#ff4d4d] shadow-[0_0_6px_#ff4d4d]',  label: 'OFFLINE',     text: 'text-[#ff4d4d]' },
+}
+
+export default function Header({ ticker, onTickerChange, connected, onConnect, onDisconnect, mode, modeReason }) {
   const [customVal, setCustomVal] = useState('')
 
   const handlePreset = (t) => {
-    setCustomVal('')       // clear the text input so it never duplicates a preset
+    setCustomVal('')
     onTickerChange(t)
   }
 
@@ -16,8 +27,9 @@ export default function Header({ ticker, onTickerChange, connected, onConnect, o
     if (v) onTickerChange(v)
   }
 
-  const isPreset      = PRESETS.includes(ticker)
-  const customActive  = !isPreset && !!ticker
+  const isPreset     = PRESETS.includes(ticker)
+  const customActive = !isPreset && !!ticker
+  const cfg          = MODE_CONFIG[mode] ?? MODE_CONFIG.offline
 
   return (
     <div className="border-b border-[#1c2333] bg-[#0d1117] px-4 py-3 flex flex-wrap items-center gap-y-2 justify-between">
@@ -28,11 +40,6 @@ export default function Header({ ticker, onTickerChange, connected, onConnect, o
         <span className="text-[#00ff88] font-bold tracking-[0.14em] text-[13px] glow-green whitespace-nowrap">
           MICROSTRUCTURE ALPHA ENGINE
         </span>
-        {isSimulated && (
-          <span className="text-[10px] px-2 py-0.5 border border-[#ffd700]/40 text-[#ffd700] tracking-widest whitespace-nowrap">
-            SIM
-          </span>
-        )}
       </div>
 
       {/* ── Controls ── */}
@@ -54,7 +61,7 @@ export default function Header({ ticker, onTickerChange, connected, onConnect, o
             </button>
           ))}
 
-          {/* Custom ticker — only shows value when it's NOT a preset */}
+          {/* Custom ticker input */}
           <input
             type="text"
             value={customActive ? ticker : customVal}
@@ -77,20 +84,25 @@ export default function Header({ ticker, onTickerChange, connected, onConnect, o
           className={`px-4 py-1.5 text-[11px] font-semibold tracking-[0.10em] border transition-all ${
             connected
               ? 'border-[#ff4d4d]/60 text-[#ff4d4d] hover:bg-[#ff4d4d]/10'
-              : 'border-[#00ff88]/60 text-[#00ff88] hover:bg-[#00ff88]/10'
+              : 'border-[#00ff88] text-[#00ff88] bg-[#00ff88]/8 shadow-[0_0_10px_rgba(0,255,136,0.22)] hover:bg-[#00ff88]/14'
           }`}
         >
           {connected ? 'DISCONNECT' : 'CONNECT'}
         </button>
 
-        {/* Status dot */}
+        {/* ── Status indicator ── */}
         <div className="flex items-center gap-2">
-          <span className={`w-2 h-2 rounded-full flex-shrink-0 ${
-            connected ? 'bg-[#00ff88] shadow-[0_0_7px_#00ff88]' : 'bg-[#2d3748]'
-          }`} />
-          <span className={`text-[11px] tracking-widest ${connected ? 'text-[#00ff88]' : 'text-[#6b7280]'}`}>
-            {connected ? 'LIVE' : 'OFFLINE'}
-          </span>
+          <span className={`w-2 h-2 rounded-full flex-shrink-0 ${cfg.dot}`} />
+          <div className="flex flex-col leading-none">
+            <span className={`text-[11px] tracking-widest ${cfg.text}`}>
+              {cfg.label}
+            </span>
+            {mode === 'simulation' && modeReason && (
+              <span className="text-[8px] text-[#ffd700]/50 tracking-wide mt-0.5 max-w-[180px] truncate">
+                {modeReason}
+              </span>
+            )}
+          </div>
         </div>
 
       </div>
